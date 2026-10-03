@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:,">
+        <title>Wortelworm's Redirection Engine</title>
+
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+
+        :root {
+            --background: oklch(20% 0 0deg);
+            --text: oklch(90% 0 0deg);
+
+            --cursor-highlight: oklch(75% 0.25 260deg);
+            --diff: 0.1;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --background: oklch(99.5% 0 0deg);
+                --text: oklch(20% 0 0deg);
+
+                --cursor-highlight: oklch(55% 0.25 260deg);
+                --diff: -0.1
+            }
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            caret-color: var(--cursor-highlight);
+        }
+
+        main {
+            margin-top: calc((100vh - 3em) / 4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5em;
+        }
+
+        form {
+            display: flex;
+            width: calc(min(100vw - 1em, 35em));
+            border: none;
+            border-radius: 1em;
+
+            background-color: oklch(from var(--background) calc(l + var(--diff)) c h);
+        }
+        form:has(> :focus) {
+            outline: 2px solid var(--cursor-highlight);
+        }
+
+        input {
+            border-radius: 1em;
+            padding: 0.75em;
+            color: inherit;
+            background-color: inherit;
+            border: none;
+        }
+        input[type="submit"] {
+            cursor: pointer;
+        }
+        input:focus {
+            outline: none;
+        }
+        </style>
+    </head>
+
+    <body>
+        <main>
+            <!-- Header -->
+            <div>
+                <h1 style="font-size: 2em; text-align: center;">
+                    Wortelworm's <br/> Redirection Engine
+                </h1>
+            </div>
+
+            <!-- Search bar -->
+            <form>
+                <input
+                    autofocus
+                    type="text"
+                    style="flex-grow: 1;"
+                    placeholder="Search anything"
+                    name="q"
+                    required minlength="1"
+                />
+                <input
+                    type="submit"
+                    value="🔍"
+                />
+            </form>
+        </main>
+    </body>
+</html>

@@ -54,13 +54,29 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let app = Router::new()
                 .route("/redirect", get(endpoint_handler))
                 .with_state(bangs);
-            let listener = tokio::net::TcpListener::bind(HOST).await?;
+            let listener = try_bind_tcp_listener().await?;
 
             println!("Ready! Listening on {HOST}");
             axum::serve(listener, app).await?;
 
             Ok(())
         })
+}
+
+/// The first time trying to acquire the port seems to fail,
+/// despite my attempts of making this program only start after systemd's `network.target`.
+/// As a workaround, try to bind every second for a minute straight.
+async fn try_bind_tcp_listener() -> std::io::Result<tokio::net::TcpListener> {
+    for _ in 0..60 {
+        let res = tokio::net::TcpListener::bind(HOST).await;
+        if res.is_ok() {
+            return res;
+        }
+
+        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+    }
+
+    tokio::net::TcpListener::bind(HOST).await
 }
 
 // See also:
